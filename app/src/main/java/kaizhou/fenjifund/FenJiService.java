@@ -103,7 +103,7 @@ public class FenJiService extends Service {
     public void onDestroy() {
         bRunning = false;
         runningThread = null;
-        Log.d("FenJiService", "Destroy");
+        Log.d("FenJiService", "Destroy1");
         super.onDestroy();
     }
 }
