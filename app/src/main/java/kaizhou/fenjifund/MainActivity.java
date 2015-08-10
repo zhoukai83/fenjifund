@@ -138,6 +138,7 @@ public class MainActivity extends ActionBarActivity {
             public void onClick(View v) {
                 Intent serviceIntent = new Intent(MainActivity.this, FenJiService.class);
                 stopService(serviceIntent);
+                unbindService(serviceConnection);
             }
         });
 

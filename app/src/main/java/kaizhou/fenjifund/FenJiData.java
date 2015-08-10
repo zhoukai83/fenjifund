@@ -21,6 +21,10 @@ public class FenJiData  implements Parcelable  {
 
     public float bValue;
 
+    public float bYesterdayValue;
+
+    public float bIncrease;
+
     public String motherCode;
 
     public String motherName;

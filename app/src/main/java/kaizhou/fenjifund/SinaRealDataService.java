@@ -49,6 +49,7 @@ public class SinaRealDataService {
                     item.Name = splitString[0].substring(splitString[0].lastIndexOf("\"") + 1);
                     item.Current = Float.parseFloat(splitString[3]);
                     item.Sell1 = Float.parseFloat(splitString[7]);
+                    item.yesterdayClose = Float.parseFloat(splitString[2]);
                     list.add(item);
 
                 }catch (PatternSyntaxException ex) {

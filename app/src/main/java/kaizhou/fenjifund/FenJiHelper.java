@@ -5,7 +5,10 @@ import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collections;
+import java.util.Date;
+import java.util.GregorianCalendar;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,15 +66,34 @@ public class FenJiHelper {
         {
             for(SinaRealTimeData value : valueList)
             {
-                if(data.aCode.equals(value.Id))
-                {
-                    data.aValue = value.Sell1;
+                Date currentDate = new Date();
+                Calendar cal = GregorianCalendar.getInstance();
+                cal.setTime(currentDate);
+                cal.set(Calendar.HOUR_OF_DAY, 15);
+
+                Date clockOn15 = cal.getTime();
+
+                if(currentDate.after(clockOn15)) {
+                    if (data.aCode.equals(value.Id)) {
+                        data.aValue = value.Current;
+                    } else if (data.bCode.equals(value.Id)) {
+                        data.bValue = value.Current;
+                        data.bYesterdayValue = value.yesterdayClose;
+                    }
                 }
-                else if(data.bCode.equals(value.Id))
-                {
-                    data.bValue = value.Sell1;
+                else {
+                    if (data.aCode.equals(value.Id)) {
+                        data.aValue = value.Sell1;
+                    } else if (data.bCode.equals(value.Id)) {
+                        data.bValue = value.Sell1;
+                        data.bYesterdayValue = value.yesterdayClose;
+                    }
                 }
+
+
             }
+
+            data.bIncrease = (data.bValue - data.bYesterdayValue) / data.bYesterdayValue;
         }
 
         for(FenJiData data : list)
@@ -120,8 +142,10 @@ public class FenJiHelper {
 
             fund.yiJiaLv = (fund.combineValue - fund.motherEvaluate) / fund.motherEvaluate;
 
-           if(fund.yiJiaLv < threshold)
+           if(fund.yiJiaLv < threshold && fund.yiJiaLv > -0.2 && fund.bIncrease < 0.099)
+           {
                find = true;
+           }
         }
 
 

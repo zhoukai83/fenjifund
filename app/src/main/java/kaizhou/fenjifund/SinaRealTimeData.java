@@ -13,4 +13,6 @@ public class SinaRealTimeData
     public float Current;
 
     public float Sell1;
+
+    public float yesterdayClose;
 }
