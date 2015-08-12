@@ -109,16 +109,22 @@ public class FenJiHelper {
         String content = WebsiteHelper.InvokeUrlByGet("http://fund.eastmoney.com/Ruanjian_Pzgz_gszzl.html");
 
         try {
-            Pattern regex = Pattern.compile("tr class=\"line.*?td>(\\d\\d\\d\\d\\d\\d).*?gsz'>(\\d+\\.\\d+).*?(\\d.\\d+)</td></tr");
-            Matcher regexMatcher = regex.matcher(content);
-            while (regexMatcher.find()) {
+       ////     Pattern regex = Pattern.compile("tr class=\"line.*?td>(\\d\\d\\d\\d\\d\\d).*?gsz'>(\\d+\\.\\d+).*?(\\d.\\d+)</td></tr");
+            Pattern regexFund = Pattern.compile("tr class=\"l.*?tr");
+            Matcher regexMatcher = regexFund.matcher(content);
 
-                for(FenJiData fund : list)
-                {
-                    if(fund.motherCode.equals(regexMatcher.group(1)))
+            Pattern regex = Pattern.compile("(\\d{6}).*?gsz'>(\\d+\\.\\d+).*?(\\d+.\\d+)");
+
+            while (regexMatcher.find()) {
+                Matcher regexMatcherItem = regex.matcher(regexMatcher.group());
+                if (regexMatcherItem.find()) {
+                    for(FenJiData fund : list)
                     {
-                        fund.motherEvaluate = Float.parseFloat(regexMatcher.group(2));
-                        fund.motherValue = Float.parseFloat(regexMatcher.group(3));
+                        if(fund.motherCode.equals(regexMatcherItem.group(1)))
+                        {
+                            fund.motherEvaluate = Float.parseFloat(regexMatcherItem.group(2));
+                            fund.motherValue = Float.parseFloat(regexMatcherItem.group(3));
+                        }
                     }
                 }
             }

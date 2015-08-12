@@ -28,8 +28,9 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Money"
-            android:inputType="number"/>
+            android:text="M:"
+            android:inputType="number"
+            android:id="@+id/" />
 
         <EditText
             android:layout_width="match_parent"
