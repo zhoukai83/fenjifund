@@ -45,6 +45,12 @@ public class FenJiData  implements Parcelable  {
 
     public float yiJiaLv;
 
+    @Override
+    public String toString()
+    {
+        return String.format("%s %f", aName, yiJiaLv);
+    }
+
 
     @Override
     public int describeContents() {

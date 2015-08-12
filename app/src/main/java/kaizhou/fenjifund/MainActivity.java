@@ -10,12 +10,9 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.os.Vibrator;
 import android.support.v7.app.ActionBarActivity;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SimpleAdapter;
@@ -30,6 +27,9 @@ import java.util.HashMap;
 public class MainActivity extends ActionBarActivity {
   ////  private Vibrator vibrator;
     EditText thresholdText;
+    EditText totalMoneyText;
+
+    ArrayList<FenJiData> fenJiDataArrayList;
 
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
@@ -37,19 +37,19 @@ public class MainActivity extends ActionBarActivity {
         public void onReceive(Context context, Intent intent) {
             // Get extra data included in the Intent
             ArrayList<FenJiData> list = intent.getParcelableArrayListExtra("data");
-
+            fenJiDataArrayList = list;
             // Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 
             ListView listView = (ListView) findViewById(R.id.MyListView);
 
             //?????????????
-            ArrayList<HashMap<String, String>> mylist = new ArrayList<>(list.size());
+            ArrayList<HashMap<String, Object>> mylist = new ArrayList<>(list.size());
 
             for(FenJiData data : list)
             {
-                HashMap<String, String> map = new HashMap<>();
-                map.put("ItemCode", String.format("%s %s", data.aCode, data.aName));
-                map.put("ItemYiJiaLv", Float.toString(data.yiJiaLv));
+                HashMap<String, Object> map = new HashMap<>();
+                map.put("ItemCode", String.format("%s", data.aCode));
+                map.put("ItemYiJiaLv", data);
                 mylist.add(map);
             }
 
@@ -65,11 +65,10 @@ public class MainActivity extends ActionBarActivity {
             TextView text = (TextView) findViewById(R.id.textView);
             SimpleDateFormat   formatter   =   new SimpleDateFormat("HH:mm:ss");
             Date curDate   =   new   Date(System.currentTimeMillis());//??????
-            String   str   =   formatter.format(curDate);
+            String   str   =  String.format("%s, %s", formatter.format(curDate), fenJiService.getThreshold());
             text.setText(str);
         }
     };
-
 
     private FenJiService fenJiService;
     private boolean bound;
@@ -111,13 +110,15 @@ public class MainActivity extends ActionBarActivity {
         registerReceiver(mMessageReceiver, new IntentFilter("FenJiList"));
 
         thresholdText = (EditText)findViewById(R.id.editTextThreshold);
+        totalMoneyText = (EditText)findViewById(R.id.textViewMoney);
+
         thresholdText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
-                    String text = String.valueOf(thresholdText.getText());
-                    if (!text.isEmpty() && fenJiService != null) {
-                        fenJiService.setThreshold(Float.parseFloat(String.valueOf("-" + text)));
-                    }
+                String text = String.valueOf(thresholdText.getText());
+                if (!text.isEmpty() && fenJiService != null) {
+                    fenJiService.setThreshold(Float.parseFloat(String.valueOf("-" + text)));
+                }
             }
         });
 
@@ -155,6 +156,28 @@ public class MainActivity extends ActionBarActivity {
                 list.add(item);
                 intent.putParcelableArrayListExtra("data", list);
                 sendBroadcast(intent);
+            }
+        });
+
+        ListView listView = (ListView)this.findViewById(R.id.MyListView);
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Object itemTemp = parent.getItemAtPosition(position);
+                HashMap<String,Object> hashMap = (HashMap<String,Object>)itemTemp;
+                FenJiData item = (FenJiData) hashMap.get("ItemYiJiaLv");
+
+                String text = String.valueOf(totalMoneyText.getText());
+                int money = Integer.parseInt(text);
+
+                float aTotal = item.aValue * item.aRatio;
+                float bTotal = item.bValue * item.bRatio;
+                float temp = money / (aTotal + bTotal);
+                float aNum = temp * item.aRatio;
+                float bNum = temp * item.bRatio;
+
+                String showText = String.format("%s:%f.%f", item.aCode, aNum, bNum);
+                setTitle(showText);
             }
         });
     }

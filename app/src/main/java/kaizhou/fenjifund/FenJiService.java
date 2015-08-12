@@ -26,6 +26,8 @@ public class FenJiService extends Service {
         this.threshold = value / 100;
     }
 
+    public float getThreshold() { return this.threshold; }
+
     private boolean bRunning = true;
 
     private float threshold = (float) -2.0 / 100;
