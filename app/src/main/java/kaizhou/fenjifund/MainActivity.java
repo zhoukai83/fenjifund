@@ -26,7 +26,6 @@ import java.util.HashMap;
 
 
 public class MainActivity extends ActionBarActivity {
-    ////  private Vibrator vibrator;
     EditText thresholdText;
     EditText totalMoneyText;
 
@@ -36,14 +35,12 @@ public class MainActivity extends ActionBarActivity {
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            // Get extra data included in the Intent
             ArrayList<FenJiData> list = intent.getParcelableArrayListExtra("data");
             fenJiDataArrayList = list;
             // Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 
             ListView listView = (ListView) findViewById(R.id.MyListView);
 
-            //?????????????
             ArrayList<HashMap<String, Object>> mylist = new ArrayList<>(list.size());
 
             for (FenJiData data : list) {
@@ -53,13 +50,11 @@ public class MainActivity extends ActionBarActivity {
                 mylist.add(map);
             }
 
-            //????????===?ListItem
             SimpleAdapter mSchedule = new SimpleAdapter(context, //?????
                     mylist,//????
                     R.layout.my_listitem,//ListItem?XML??
                     new String[]{"ItemCode", "ItemYiJiaLv"},//?????ListItem?????
                     new int[]{R.id.ItemTitle, R.id.ItemText});//ListItem?XML???????TextView ID
-            //??????
             listView.setAdapter(mSchedule);
 
             TextView text = (TextView) findViewById(R.id.textView);
@@ -178,7 +173,7 @@ public class MainActivity extends ActionBarActivity {
             float aNum = temp * item.aRatio;
             float bNum = temp * item.bRatio;
 
-            String showText = String.format("%s:%f.%f", item.aCode, aNum, bNum);
+            String showText = String.format("%s:%.1f.%.1f.%.3f", item.aCode, aNum, bNum,item.bValue);
             setTitle(showText);
         }
     };
