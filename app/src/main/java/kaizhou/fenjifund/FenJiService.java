@@ -20,17 +20,18 @@ public class FenJiService extends Service {
         }
     }
 
-
+    private float threshold = (float) -2.0 / 100;
     public void setThreshold(float value)
     {
         this.threshold = value / 100;
     }
-
     public float getThreshold() { return this.threshold; }
 
     private boolean bRunning = true;
 
-    private float threshold = (float) -2.0 / 100;
+    private int sleepTime = 1;
+    public void setSleepTime(int value) { this.sleepTime = value; }
+    public int getSleepTime() { return this.sleepTime; }
 
     private Thread runningThread;
 
@@ -85,7 +86,8 @@ public class FenJiService extends Service {
                         }
 
                         sendMessageToActivity(list);
-                        Thread.sleep(1000);
+                        Log.d("FenJiService", String.valueOf(sleepTime));
+                        Thread.sleep(sleepTime*1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }

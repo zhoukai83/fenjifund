@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.SeekBar;
 import android.widget.SimpleAdapter;
 import android.widget.TextView;
 
@@ -25,7 +26,7 @@ import java.util.HashMap;
 
 
 public class MainActivity extends ActionBarActivity {
-  ////  private Vibrator vibrator;
+    ////  private Vibrator vibrator;
     EditText thresholdText;
     EditText totalMoneyText;
 
@@ -45,8 +46,7 @@ public class MainActivity extends ActionBarActivity {
             //?????????????
             ArrayList<HashMap<String, Object>> mylist = new ArrayList<>(list.size());
 
-            for(FenJiData data : list)
-            {
+            for (FenJiData data : list) {
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("ItemCode", String.format("%s", data.aCode));
                 map.put("ItemYiJiaLv", data);
@@ -57,40 +57,36 @@ public class MainActivity extends ActionBarActivity {
             SimpleAdapter mSchedule = new SimpleAdapter(context, //?????
                     mylist,//????
                     R.layout.my_listitem,//ListItem?XML??
-                    new String[] {"ItemCode", "ItemYiJiaLv"},//?????ListItem?????
-                    new int[] {R.id.ItemTitle,R.id.ItemText});//ListItem?XML???????TextView ID
+                    new String[]{"ItemCode", "ItemYiJiaLv"},//?????ListItem?????
+                    new int[]{R.id.ItemTitle, R.id.ItemText});//ListItem?XML???????TextView ID
             //??????
             listView.setAdapter(mSchedule);
 
             TextView text = (TextView) findViewById(R.id.textView);
-            SimpleDateFormat   formatter   =   new SimpleDateFormat("HH:mm:ss");
-            Date curDate   =   new   Date(System.currentTimeMillis());//??????
-            String   str   =  String.format("%s, %s", formatter.format(curDate), fenJiService.getThreshold());
+            SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
+            Date curDate = new Date(System.currentTimeMillis());//??????
+            String str = String.format("%s %s, %s", fenJiService.getSleepTime(), formatter.format(curDate), fenJiService.getThreshold());
             text.setText(str);
         }
     };
 
     private FenJiService fenJiService;
-    private boolean bound;
     private final ServiceConnection serviceConnection = new ServiceConnection() {
-        public void onServiceConnected( ComponentName className, IBinder service ) {
-            fenJiService = (FenJiService) ( (FenJiService.FenJiServiceBinder) service ).getService();
-            bound = true;
+        public void onServiceConnected(ComponentName className, IBinder service) {
+            fenJiService = (FenJiService) ((FenJiService.FenJiServiceBinder) service).getService();
         }
 
-        public void onServiceDisconnected( ComponentName className ) {
+        public void onServiceDisconnected(ComponentName className) {
             fenJiService = null;
-            bound = false;
         }
     };
 
     void doBindService() {
-        boolean bound = bindService( new Intent( this, FenJiService.class ), serviceConnection, Context.BIND_AUTO_CREATE );
-        if ( bound ) {
-            Log.d("MainAty", "Successfully bound to service" );
-        }
-        else {
-            Log.d("MainAty", "Failed to bind service" );
+        boolean bound = bindService(new Intent(this, FenJiService.class), serviceConnection, Context.BIND_AUTO_CREATE);
+        if (bound) {
+            Log.d("MainAty", "Successfully bound to service");
+        } else {
+            Log.d("MainAty", "Failed to bind service");
         }
     }
 
@@ -99,9 +95,9 @@ public class MainActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+        Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
         if (vibrator.hasVibrator()) {
-            long [] pattern = {100,400,100,400};   // ?? ?? ?? ??
+            long[] pattern = {100, 400, 100, 400};   // ?? ?? ?? ??
             vibrator.vibrate(pattern, -1);         //???????pattern ?????????index??-1
         } else {
             Log.d("Can Vibrate", "NO");
@@ -109,8 +105,8 @@ public class MainActivity extends ActionBarActivity {
 
         registerReceiver(mMessageReceiver, new IntentFilter("FenJiList"));
 
-        thresholdText = (EditText)findViewById(R.id.editTextThreshold);
-        totalMoneyText = (EditText)findViewById(R.id.textViewMoney);
+        thresholdText = (EditText) findViewById(R.id.editTextThreshold);
+        totalMoneyText = (EditText) findViewById(R.id.textViewMoney);
 
         thresholdText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -125,7 +121,7 @@ public class MainActivity extends ActionBarActivity {
         this.findViewById(R.id.buttonStartService).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent serviceIntent = new Intent(MainActivity.this,FenJiService.class);
+                Intent serviceIntent = new Intent(MainActivity.this, FenJiService.class);
 
                 String text = String.valueOf(thresholdText.getText());
                 serviceIntent.putExtra("Threshold", Float.parseFloat(String.valueOf("-" + text)));
@@ -159,26 +155,55 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        ListView listView = (ListView)this.findViewById(R.id.MyListView);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Object itemTemp = parent.getItemAtPosition(position);
-                HashMap<String,Object> hashMap = (HashMap<String,Object>)itemTemp;
-                FenJiData item = (FenJiData) hashMap.get("ItemYiJiaLv");
+        ListView listView = (ListView) this.findViewById(R.id.MyListView);
+        listView.setOnItemClickListener(listViewOnItemClickListerner);
 
-                String text = String.valueOf(totalMoneyText.getText());
-                int money = Integer.parseInt(text);
-
-                float aTotal = item.aValue * item.aRatio;
-                float bTotal = item.bValue * item.bRatio;
-                float temp = money / (aTotal + bTotal);
-                float aNum = temp * item.aRatio;
-                float bNum = temp * item.bRatio;
-
-                String showText = String.format("%s:%f.%f", item.aCode, aNum, bNum);
-                setTitle(showText);
-            }
-        });
+        SeekBar seekBar = (SeekBar) this.findViewById(R.id.seekBar);
+        seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
     }
+
+    private AdapterView.OnItemClickListener listViewOnItemClickListerner = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+            Object itemTemp = parent.getItemAtPosition(position);
+            HashMap<String, Object> hashMap = (HashMap<String, Object>) itemTemp;
+            FenJiData item = (FenJiData) hashMap.get("ItemYiJiaLv");
+
+            String text = String.valueOf(totalMoneyText.getText());
+            int money = Integer.parseInt(text);
+
+            float aTotal = item.aValue * item.aRatio;
+            float bTotal = item.bValue * item.bRatio;
+            float temp = money / (aTotal + bTotal);
+            float aNum = temp * item.aRatio;
+            float bNum = temp * item.bRatio;
+
+            String showText = String.format("%s:%f.%f", item.aCode, aNum, bNum);
+            setTitle(showText);
+        }
+    };
+
+    private SeekBar.OnSeekBarChangeListener seekBarChangeListener = new SeekBar.OnSeekBarChangeListener() {
+        @Override
+        public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+
+        }
+
+        @Override
+        public void onStartTrackingTouch(SeekBar seekBar) {
+        }
+
+        @Override
+        public void onStopTrackingTouch(SeekBar seekBar) {
+            TextView textView = (TextView) findViewById(R.id.textView);
+            int progress = seekBar.getProgress();
+            textView.setText(String.valueOf(progress + 1));
+
+            if(fenJiService != null)
+            {
+                fenJiService.setSleepTime(progress + 1);
+            }
+        }
+    };
+
 }
