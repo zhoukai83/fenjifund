@@ -2,6 +2,7 @@ package kaizhou.fenjifund;
 
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 
 import java.util.Comparator;
 
@@ -45,6 +46,13 @@ public class FenJiData  implements Parcelable  {
 
     public float yiJiaLv;
 
+    public boolean notify;
+
+    public FenJiData()
+    {
+        notify = true;
+    }
+
     @Override
     public String toString()
     {
@@ -80,6 +88,7 @@ public class FenJiData  implements Parcelable  {
 
         dest.writeFloat(combineValue);
         dest.writeFloat(yiJiaLv);
+        dest.writeByte((byte) (notify ? 1 : 0));
     }
 
     public static final Parcelable.Creator<FenJiData> CREATOR = new Creator<FenJiData>() {
@@ -106,6 +115,7 @@ public class FenJiData  implements Parcelable  {
 
             data.combineValue = source.readFloat();
             data.yiJiaLv = source.readFloat();
+            data.notify = source.readByte() != 0;
 
             return data;
         }

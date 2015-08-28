@@ -149,7 +149,7 @@ public class FenJiHelper {
 
             fund.yiJiaLv = (fund.combineValue - fund.motherEvaluate) / fund.motherEvaluate;
 
-           if(fund.yiJiaLv < threshold && fund.yiJiaLv > Constants.invalidYiJiaLvThreshold && fund.bIncrease < 0.099)
+           if(fund.notify && fund.yiJiaLv < threshold && fund.yiJiaLv > Constants.invalidYiJiaLvThreshold && fund.bIncrease < 0.099)
            {
                find = true;
            }
@@ -182,9 +182,9 @@ public class FenJiHelper {
             list.add(data);
         }
 
-        for(FenJiData fund: list) {
+      /*  for(FenJiData fund: list) {
             Log.d("FenJiHelper", String.format("%s,%s,%f,%f,%f,%f,%f", fund.motherCode, fund.motherName, fund.yiJiaLv, fund.combineValue, fund.motherEvaluate, fund.aValue, fund.bValue));
-        }
+        }*/
 
         return find;
     }

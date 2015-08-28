@@ -30,7 +30,7 @@ public class MainActivity extends ActionBarActivity {
     EditText totalMoneyText;
 
     ArrayList<FenJiData> fenJiDataArrayList;
-
+    ListViewAdapter adapter;
 
     private BroadcastReceiver mMessageReceiver = new BroadcastReceiver() {
         @Override
@@ -41,21 +41,27 @@ public class MainActivity extends ActionBarActivity {
 
             ListView listView = (ListView) findViewById(R.id.MyListView);
 
-            ArrayList<HashMap<String, Object>> mylist = new ArrayList<>(list.size());
-
+         /*   ArrayList<HashMap<String, Object>> mylist = new ArrayList<>(list.size());
             for (FenJiData data : list) {
                 HashMap<String, Object> map = new HashMap<>();
                 map.put("ItemCode", String.format("%s %s", data.aCode, data.aName));
                 map.put("ItemYiJiaLv", data);
                 mylist.add(map);
             }
+            SimpleAdapter mSchedule = new SimpleAdapter(context,
+                    mylist,
+                    R.layout.my_listitem,
+                    new String[]{"ItemCode", "ItemYiJiaLv"},
+                    new int[]{R.id.ItemTitle, R.id.ItemText});
+            listView.setAdapter(mSchedule);*/
 
-            SimpleAdapter mSchedule = new SimpleAdapter(context, //?????
-                    mylist,//????
-                    R.layout.my_listitem,//ListItem?XML??
-                    new String[]{"ItemCode", "ItemYiJiaLv"},//?????ListItem?????
-                    new int[]{R.id.ItemTitle, R.id.ItemText});//ListItem?XML???????TextView ID
-            listView.setAdapter(mSchedule);
+            if(adapter == null)
+            {
+                adapter = new ListViewAdapter(context, fenJiService);
+            }
+
+            adapter.setData(list);
+            listView.setAdapter(adapter);
 
             TextView text = (TextView) findViewById(R.id.textView);
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
@@ -161,9 +167,10 @@ public class MainActivity extends ActionBarActivity {
         @Override
         public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
             Object itemTemp = parent.getItemAtPosition(position);
-            HashMap<String, Object> hashMap = (HashMap<String, Object>) itemTemp;
-            FenJiData item = (FenJiData) hashMap.get("ItemYiJiaLv");
+        //    HashMap<String, Object> hashMap = (HashMap<String, Object>) itemTemp;
+        //    FenJiData item = (FenJiData) hashMap.get("ItemYiJiaLv");
 
+            FenJiData item = (FenJiData)itemTemp;
             String text = String.valueOf(totalMoneyText.getText());
             int money = Integer.parseInt(text);
 

@@ -39,7 +39,14 @@ public class FenJiService extends Service {
     public void setSleepTime(int value) { this.sleepTime = value; }
     public int getSleepTime() { return this.sleepTime; }
 
+    public void setNotifyProperty(int position, boolean notify)
+    {
+        list.get(position).notify = notify;
+    }
+
     private Thread runningThread;
+    ArrayList<FenJiData> list;
+
 
     private final FenJiServiceBinder binder = new FenJiServiceBinder();
 
@@ -75,7 +82,7 @@ public class FenJiService extends Service {
             @Override
             public void run() {
                 FenJiHelper helper = new FenJiHelper();
-                ArrayList<FenJiData> list = helper.FetchFenJiData();
+                list = helper.FetchFenJiData();
 
                 while(bRunning) {
                     try {

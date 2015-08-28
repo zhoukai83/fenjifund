@@ -7,12 +7,26 @@
     android:id="@+id/MyListItem"
     android:paddingBottom="3dip"
     android:paddingLeft="10dip">
-    <TextView
-        android:layout_height="wrap_content"
+
+    <LinearLayout
         android:layout_width="fill_parent"
-        android:id="@+id/ItemTitle"
-        android:textSize="20dip">
-    </TextView>
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:id="@+id/list.select"
+            android:focusable="false"/>
+
+        <TextView
+            android:layout_height="wrap_content"
+            android:layout_width="fill_parent"
+            android:id="@+id/ItemTitle"
+            android:textSize="20dip">
+        </TextView>
+    </LinearLayout>
+
     <TextView
         android:layout_height="wrap_content"
         android:layout_width="fill_parent"
