@@ -48,7 +48,7 @@ public class FenJiData  implements Parcelable  {
     @Override
     public String toString()
     {
-        return String.format("%s %.3f %f", aName, aValue, yiJiaLv);
+        return String.format("%.3f %f", aValue, yiJiaLv);
     }
 
 

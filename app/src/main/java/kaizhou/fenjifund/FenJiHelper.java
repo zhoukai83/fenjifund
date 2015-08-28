@@ -4,6 +4,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.util.Log;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -148,14 +149,38 @@ public class FenJiHelper {
 
             fund.yiJiaLv = (fund.combineValue - fund.motherEvaluate) / fund.motherEvaluate;
 
-           if(fund.yiJiaLv < threshold && fund.yiJiaLv > -0.2 && fund.bIncrease < 0.099)
+           if(fund.yiJiaLv < threshold && fund.yiJiaLv > Constants.invalidYiJiaLvThreshold && fund.bIncrease < 0.099)
            {
                find = true;
            }
         }
 
-
         Collections.sort(list, new YiJiaLvComparator());
+
+        ArrayList<FenJiData> newArray = new ArrayList<>(list.size());
+
+        for(FenJiData data : list)
+        {
+            if(data.yiJiaLv > Constants.invalidYiJiaLvThreshold)
+            {
+                newArray.add(data);
+            }
+        }
+
+        for(FenJiData data : list)
+        {
+            if(data.yiJiaLv <= Constants.invalidYiJiaLvThreshold)
+            {
+                newArray.add(data);
+            }
+        }
+
+        list.clear();
+
+        for(FenJiData data: newArray)
+        {
+            list.add(data);
+        }
 
         for(FenJiData fund: list) {
             Log.d("FenJiHelper", String.format("%s,%s,%f,%f,%f,%f,%f", fund.motherCode, fund.motherName, fund.yiJiaLv, fund.combineValue, fund.motherEvaluate, fund.aValue, fund.bValue));

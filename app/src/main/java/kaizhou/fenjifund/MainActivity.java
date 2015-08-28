@@ -45,7 +45,7 @@ public class MainActivity extends ActionBarActivity {
 
             for (FenJiData data : list) {
                 HashMap<String, Object> map = new HashMap<>();
-                map.put("ItemCode", String.format("%s", data.aCode));
+                map.put("ItemCode", String.format("%s %s", data.aCode, data.aName));
                 map.put("ItemYiJiaLv", data);
                 mylist.add(map);
             }
@@ -173,7 +173,7 @@ public class MainActivity extends ActionBarActivity {
             float aNum = temp * item.aRatio;
             float bNum = temp * item.bRatio;
 
-            String showText = String.format("%s:%.1f.%.1f.%.3f", item.aCode, aNum, bNum,item.bValue);
+            String showText = String.format("%s:%.1f.%.1f.%.3f.%3f", item.aCode, aNum, bNum,item.bValue, item.motherEvaluate);
             setTitle(showText);
         }
     };

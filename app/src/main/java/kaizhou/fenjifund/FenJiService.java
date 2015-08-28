@@ -1,11 +1,17 @@
 package kaizhou.fenjifund;
 
+import android.app.Activity;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
+import android.app.TaskStackBuilder;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Binder;
 import android.os.IBinder;
 import android.os.Vibrator;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -71,23 +77,21 @@ public class FenJiService extends Service {
                 FenJiHelper helper = new FenJiHelper();
                 ArrayList<FenJiData> list = helper.FetchFenJiData();
 
-                while(bRunning)
-                {
+                while(bRunning) {
                     try {
                         helper.UpdateFenJiValue(list);
                         helper.GetMotherFundValue(list);
-                        if(helper.Notify(list, threshold))
-                        {
-                            Vibrator vibrator = (Vibrator)getSystemService(Context.VIBRATOR_SERVICE);
+                        if (helper.Notify(list, threshold)) {
+                            Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                             if (vibrator.hasVibrator()) {
-                                long [] pattern = {100,400,100,400};   // ?? ?? ?? ??
+                                long[] pattern = {100, 400, 100, 400};   // ?? ?? ?? ??
                                 vibrator.vibrate(pattern, -1);         //???????pattern ?????????index??-1
                             }
                         }
 
                         sendMessageToActivity(list);
                         Log.d("FenJiService", String.valueOf(sleepTime));
-                        Thread.sleep(sleepTime*1000);
+                        Thread.sleep(sleepTime * 1000);
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
