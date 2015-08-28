@@ -152,6 +152,7 @@ public class FenJiHelper {
            if(fund.notify && fund.yiJiaLv < threshold && fund.yiJiaLv > Constants.invalidYiJiaLvThreshold && fund.bIncrease < 0.099)
            {
                find = true;
+               fund.exceedYiJiaLv = true;
            }
         }
 

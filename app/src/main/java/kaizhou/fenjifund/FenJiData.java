@@ -48,9 +48,12 @@ public class FenJiData  implements Parcelable  {
 
     public boolean notify;
 
+    public boolean exceedYiJiaLv;
+
     public FenJiData()
     {
         notify = true;
+        exceedYiJiaLv = false;
     }
 
     @Override
@@ -89,6 +92,7 @@ public class FenJiData  implements Parcelable  {
         dest.writeFloat(combineValue);
         dest.writeFloat(yiJiaLv);
         dest.writeByte((byte) (notify ? 1 : 0));
+        dest.writeByte((byte) (exceedYiJiaLv ? 1 : 0));
     }
 
     public static final Parcelable.Creator<FenJiData> CREATOR = new Creator<FenJiData>() {
@@ -116,6 +120,7 @@ public class FenJiData  implements Parcelable  {
             data.combineValue = source.readFloat();
             data.yiJiaLv = source.readFloat();
             data.notify = source.readByte() != 0;
+            data.exceedYiJiaLv = source.readByte() != 0;
 
             return data;
         }

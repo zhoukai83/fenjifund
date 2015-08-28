@@ -1,6 +1,7 @@
 package kaizhou.fenjifund;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -77,8 +78,14 @@ public class ListViewAdapter extends BaseAdapter {
 
         FenJiData item = list.get(position);
         holder.selected.setChecked(item.notify);
+        if(item.exceedYiJiaLv)
+        {
+            holder.name.setTextColor(Color.rgb(0, 0, 255));
+        }
         holder.name.setText(item.aName);
         holder.address.setText(String.format("%.3f %f", item.aValue, item.yiJiaLv));
+
+
 
         return view;
     }
