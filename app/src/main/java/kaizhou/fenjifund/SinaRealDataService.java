@@ -45,10 +45,12 @@ public class SinaRealDataService {
                     }
 
                     SinaRealTimeData item = new SinaRealTimeData();
-                    item.Id = code;
-                    item.Name = splitString[0].substring(splitString[0].lastIndexOf("\"") + 1);
-                    item.Current = Float.parseFloat(splitString[3]);
-                    item.Sell1 = Float.parseFloat(splitString[7]);
+                    item.id = code;
+                    item.name = splitString[0].substring(splitString[0].lastIndexOf("\"") + 1);
+                    item.current = Float.parseFloat(splitString[3]);
+                    item.buy1 = Float.parseFloat(splitString[6]);
+                    item.sell1 = Float.parseFloat(splitString[7]);
+                    item.sell1Volume = Integer.parseInt(splitString[20]);
                     item.yesterdayClose = Float.parseFloat(splitString[2]);
                     list.add(item);
 

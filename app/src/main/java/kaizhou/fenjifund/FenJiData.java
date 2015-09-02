@@ -16,11 +16,21 @@ public class FenJiData  implements Parcelable  {
 
     public float aValue;
 
+    public float aSell1Volume;
+
     public String bCode;
 
     public String bName;
 
     public float bValue;
+
+    public float bSell1;
+
+    public int bSell1Volume;
+
+    public float bBuy1;
+
+    public float bCurrent;
 
     public float bYesterdayValue;
 
@@ -77,6 +87,12 @@ public class FenJiData  implements Parcelable  {
         dest.writeString(bCode);
         dest.writeString(bName);
         dest.writeFloat(bValue);
+        dest.writeFloat(bSell1);
+        dest.writeInt(bSell1Volume);
+        dest.writeFloat(bBuy1);
+        dest.writeFloat(bCurrent);
+        dest.writeFloat(bYesterdayValue);
+        dest.writeFloat(bIncrease);
 
         dest.writeString(motherCode);
         dest.writeString(motherName);
@@ -105,6 +121,12 @@ public class FenJiData  implements Parcelable  {
             data.bCode = source.readString();
             data.bName = source.readString();
             data.bValue = source.readFloat();
+            data.bSell1 = source.readFloat();
+            data.bSell1Volume = source.readInt();
+            data.bBuy1 = source.readFloat();
+            data.bCurrent = source.readFloat();
+            data.bYesterdayValue = source.readFloat();
+            data.bIncrease = source.readFloat();
 
             data.motherCode = source.readString();
             data.motherName = source.readString();

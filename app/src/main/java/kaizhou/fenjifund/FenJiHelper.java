@@ -2,9 +2,7 @@ package kaizhou.fenjifund;
 
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
-import android.util.Log;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Collections;
@@ -75,23 +73,29 @@ public class FenJiHelper {
                 Date clockOn15 = cal.getTime();
 
                 if(currentDate.after(clockOn15)) {
-                    if (data.aCode.equals(value.Id)) {
-                        data.aValue = value.Current;
-                    } else if (data.bCode.equals(value.Id)) {
-                        data.bValue = value.Current;
+                    if (data.aCode.equals(value.id)) {
+                        data.aValue = value.current;
+                    } else if (data.bCode.equals(value.id)) {
+                        data.bValue = value.current;
                         data.bYesterdayValue = value.yesterdayClose;
+                        data.bSell1 = value.sell1;
+                        data.bSell1Volume = value.sell1Volume;
+                        data.bCurrent = value.current;
+                        data.bBuy1 = value.buy1;
                     }
                 }
                 else {
-                    if (data.aCode.equals(value.Id)) {
-                        data.aValue = value.Sell1;
-                    } else if (data.bCode.equals(value.Id)) {
-                        data.bValue = value.Sell1;
+                    if (data.aCode.equals(value.id)) {
+                        data.aValue = value.sell1;
+                    } else if (data.bCode.equals(value.id)) {
+                        data.bValue = value.sell1;
                         data.bYesterdayValue = value.yesterdayClose;
+                        data.bSell1 = value.sell1;
+                        data.bSell1Volume = value.sell1Volume;
+                        data.bCurrent = value.current;
+                        data.bBuy1 = value.buy1;
                     }
                 }
-
-
             }
 
             data.bIncrease = (data.bValue - data.bYesterdayValue) / data.bYesterdayValue;
@@ -149,10 +153,15 @@ public class FenJiHelper {
 
             fund.yiJiaLv = (fund.combineValue - fund.motherEvaluate) / fund.motherEvaluate;
 
-           if(fund.notify && fund.yiJiaLv < threshold && fund.yiJiaLv > Constants.invalidYiJiaLvThreshold && fund.bIncrease < 0.099)
+           if(fund.notify && fund.yiJiaLv < threshold && fund.yiJiaLv > Constants.invalidYiJiaLvThreshold && fund.bIncrease < 0.099
+                   && fund.bSell1 == fund.bCurrent && (fund.bSell1 - fund.bBuy1) <= 0.002)
            {
                find = true;
                fund.exceedYiJiaLv = true;
+           }
+           else
+           {
+               fund.exceedYiJiaLv = false;
            }
         }
 

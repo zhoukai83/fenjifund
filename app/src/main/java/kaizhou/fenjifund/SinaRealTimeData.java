@@ -6,13 +6,17 @@ package kaizhou.fenjifund;
 
 public class SinaRealTimeData
 {
-    public String Id;
+    public String id;
 
-    public String Name;
+    public String name;
 
-    public float Current;
+    public float current;
 
-    public float Sell1;
+    public float sell1;
+
+    public int sell1Volume;
+
+    public float buy1;
 
     public float yesterdayClose;
 }

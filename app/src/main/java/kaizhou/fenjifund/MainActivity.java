@@ -65,8 +65,8 @@ public class MainActivity extends ActionBarActivity {
 
             TextView text = (TextView) findViewById(R.id.textView);
             SimpleDateFormat formatter = new SimpleDateFormat("HH:mm:ss");
-            Date curDate = new Date(System.currentTimeMillis());//??????
-            String str = String.format("%s %s, %s", fenJiService.getSleepTime(), formatter.format(curDate), fenJiService.getThreshold());
+            Date curDate = new Date(System.currentTimeMillis());
+            String str = String.format("AValue,Calc,S1,C,S1V,Bi, A %s %s, %s", fenJiService.getSleepTime(), formatter.format(curDate), fenJiService.getThreshold());
             text.setText(str);
         }
     };
