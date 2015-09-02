@@ -16,9 +16,13 @@ import org.apache.http.protocol.HTTP;
 import org.apache.http.util.EntityUtils;
 
 import java.io.BufferedInputStream;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.zip.GZIPInputStream;
@@ -29,14 +33,12 @@ import java.util.zip.GZIPInputStream;
 public class WebsiteHelper {
     public static String InvokeUrlByGet(String url)
     {
-        String result = "";
+  /*      String result = "";
 
         HttpClient client = new DefaultHttpClient();
         try {
             HttpGet get = new HttpGet(url);
-
             HttpResponse response = client.execute(get);
-
             HttpEntity resEntity = response.getEntity();
 
             if (resEntity != null) {
@@ -47,9 +49,29 @@ public class WebsiteHelper {
             e.printStackTrace();
         } finally {
             client.getConnectionManager().shutdown();
+        }*/
+
+        try
+        {
+            URL httpUrl = new URL(url);
+            HttpURLConnection connection = (HttpURLConnection)httpUrl.openConnection();
+            connection.connect();
+
+            InputStream is = connection.getInputStream();
+            BufferedReader streamReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            StringBuilder responseStrBuilder = new StringBuilder();
+
+            String inputStr;
+            while ((inputStr = streamReader.readLine()) != null)
+                responseStrBuilder.append(inputStr);
+
+            return responseStrBuilder.toString();
+        }
+         catch (IOException e) {
+            e.printStackTrace();
         }
 
-        return result;
+        return "";
     }
 
     public String GetDataByPost()
