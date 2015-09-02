@@ -13,6 +13,8 @@ import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.SeekBar;
@@ -161,6 +163,17 @@ public class MainActivity extends ActionBarActivity {
 
         SeekBar seekBar = (SeekBar) this.findViewById(R.id.seekBar);
         seekBar.setOnSeekBarChangeListener(seekBarChangeListener);
+
+        CheckBox checkBox = (CheckBox) this.findViewById(R.id.checkboxVibrate);
+        checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                if(fenJiService != null)
+                {
+                    fenJiService.setVibrate(isChecked);
+                }
+            }
+        });
     }
 
     private AdapterView.OnItemClickListener listViewOnItemClickListerner = new AdapterView.OnItemClickListener() {

@@ -44,6 +44,12 @@ public class FenJiService extends Service {
         list.get(position).notify = notify;
     }
 
+    private boolean enableVibrate = true;
+    public void setVibrate(boolean enable)
+    {
+        this.enableVibrate = enable;
+    }
+
     private Thread runningThread;
     ArrayList<FenJiData> list;
 
@@ -88,7 +94,7 @@ public class FenJiService extends Service {
                     try {
                         helper.UpdateFenJiValue(list);
                         helper.GetMotherFundValue(list);
-                        if (helper.Notify(list, threshold)) {
+                        if (helper.Notify(list, threshold) && enableVibrate) {
                             Vibrator vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);
                             if (vibrator.hasVibrator()) {
                                 long[] pattern = {100, 400, 100, 400};   // ?? ?? ?? ??
