@@ -61,17 +61,17 @@ public class FenJiHelper {
 
         List<SinaRealTimeData> valueList = service.Get(ids);
 
+        Date currentDate = new Date();
+        Calendar cal = GregorianCalendar.getInstance();
+        cal.setTime(currentDate);
+        cal.set(Calendar.HOUR_OF_DAY, 15);
+
+        Date clockOn15 = cal.getTime();
+
         for(FenJiData data : list)
         {
             for(SinaRealTimeData value : valueList)
             {
-                Date currentDate = new Date();
-                Calendar cal = GregorianCalendar.getInstance();
-                cal.setTime(currentDate);
-                cal.set(Calendar.HOUR_OF_DAY, 15);
-
-                Date clockOn15 = cal.getTime();
-
                 if(currentDate.after(clockOn15)) {
                     if (data.aCode.equals(value.id)) {
                         data.aValue = value.current;
@@ -123,9 +123,10 @@ public class FenJiHelper {
             while (regexMatcher.find()) {
                 Matcher regexMatcherItem = regex.matcher(regexMatcher.group());
                 if (regexMatcherItem.find()) {
+                    String motherCode = regexMatcherItem.group(1);
                     for(FenJiData fund : list)
                     {
-                        if(fund.motherCode.equals(regexMatcherItem.group(1)))
+                        if(fund.motherCode.equals(motherCode))
                         {
                             fund.motherEvaluate = Float.parseFloat(regexMatcherItem.group(2));
                             fund.motherValue = Float.parseFloat(regexMatcherItem.group(3));

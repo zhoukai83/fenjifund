@@ -39,7 +39,6 @@ public class MainActivity extends ActionBarActivity {
         public void onReceive(Context context, Intent intent) {
             ArrayList<FenJiData> list = intent.getParcelableArrayListExtra("data");
             fenJiDataArrayList = list;
-            // Toast.makeText(context, message, Toast.LENGTH_SHORT).show();
 
             ListView listView = (ListView) findViewById(R.id.MyListView);
 

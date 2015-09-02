@@ -55,13 +55,14 @@ public class WebsiteHelper {
         {
             URL httpUrl = new URL(url);
             HttpURLConnection connection = (HttpURLConnection)httpUrl.openConnection();
-            connection.connect();
+            connection.setConnectTimeout(1000);
 
             InputStream is = connection.getInputStream();
-            BufferedReader streamReader = new BufferedReader(new InputStreamReader(is, "UTF-8"));
+            BufferedReader streamReader = new BufferedReader(new InputStreamReader(is));
             StringBuilder responseStrBuilder = new StringBuilder();
 
             String inputStr;
+
             while ((inputStr = streamReader.readLine()) != null)
                 responseStrBuilder.append(inputStr);
 
